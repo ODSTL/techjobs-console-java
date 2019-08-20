@@ -1,8 +1,6 @@
 package org.launchcode.techjobs.console;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -61,7 +59,7 @@ public class TechJobs {
                 String searchTerm = in.nextLine();
 
                 if (searchField.equals("all")) {
-                    System.out.println("Search all fields not yet implemented.");
+                    printJobs(JobData.findByValue(searchTerm));
                 } else {
                     printJobs(JobData.findByColumnAndValue(searchField, searchTerm));
                 }
@@ -111,6 +109,45 @@ public class TechJobs {
     // Print a list of jobs
     private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
 
-        System.out.println("printJobs is not implemented yet");
+        if (someJobs.size() > 0 ) {
+
+            for (HashMap<String, String> field : someJobs) {
+
+                for(Map.Entry<String, String> data: field.entrySet()) {
+
+                    System.out.println(data.getKey() + ": " + data.getValue());
+                }
+
+                System.out.println("*****");
+            }
+
+
+        } else System.out.println("Sorry, no matches. Search again.");
+    }
+
+    public static ArrayList<HashMap<String, String>> findByValue(String searchTerm){
+
+        ArrayList<HashMap<String, String>> allJobs = JobData.findAll();
+
+        ArrayList<HashMap<String, String>> matchingItems = new ArrayList<>();
+
+        for (HashMap<String,String> row: allJobs){
+
+            for(Map.Entry<String, String> column: row.entrySet()){
+                if (column.getValue().toUpperCase().contains(searchTerm)){
+
+                    if(Arrays.asList(matchingItems).contains(row)){
+                        continue;
+                    }
+
+                    matchingItems.add(row);
+
+                }
+            }
+        }
+
+        return matchingItems;
     }
 }
+
+
